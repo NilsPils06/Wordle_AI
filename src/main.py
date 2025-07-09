@@ -16,8 +16,7 @@ def getWords():
     return words
 
 
-def getRandomWord():
-    words = getWords()
+def getRandomWord(words):
     index = random.randint(0, len(words) - 1)
 
     return words[index]
@@ -41,9 +40,10 @@ def updateCorrectLetters(word, guess):
 
 def main():
     print("Welcome to Wordle CLI!")
-    word = getRandomWord()
+    words = getWords()
+    word = getRandomWord(words)
     guess = ""
-    while len(guess) != 5:
+    while len(guess) != 5 or guess not in words:
         guess = input("Guess a 5 letter word: ")
     i = 1
     while guess != word:
@@ -57,7 +57,7 @@ def main():
         print("Correct letters in green:", correct.get("green", []))
         print("Correct letters in yellow:", correct.get("yellow", []))
         print("Incorrect letters:", list(incorrect))
-        while len(guess) != 5:
+        while len(guess) != 5 or guess not in words:
             guess = input("Guess a 5 letter word: ")
         i += 1
     else:
