@@ -1,5 +1,4 @@
 import json
-from definitions import ROOT
 import random
 
 correct = dict()
@@ -9,7 +8,7 @@ incorrect = set()
 
 
 def getWords():
-    file = open(ROOT + "/words.json")
+    file = open("words.json")
     data = json.load(file)
     words = data["words"]
 
