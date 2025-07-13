@@ -1,10 +1,7 @@
 import json
 import random
-
-correct = dict()
-correct["green"] = ["", "", "", "", ""]
-correct["yellow"] = []
-incorrect = set()
+import sys
+from colorama import Back, Style
 
 
 def getWords():
@@ -21,47 +18,43 @@ def getRandomWord(words):
     return words[index]
 
 
-def updateCorrectLetters(word, guess):
+def displayGuess(word, guess):
+    out = ["", "", "", "", ""]
     for i in range(len(guess)):
-        c = guess[i]
         if guess[i] == word[i]:
-            correct["green"][i] = c
-        elif c in word:
-            count = word.count(c)
-            count -= correct["green"].count(c)
-            count -= correct["yellow"].count(c)
-
-            if count > 0:
-                correct["yellow"].append(c)
+            out[i] = Back.GREEN + guess[i] + Style.RESET_ALL
+    for i in range(len(guess)):
+        if guess[i] in word and out[i] != guess[i]:
+            out[i] = Back.YELLOW + guess[i] + Style.RESET_ALL
         else:
-            incorrect.add(c)
+            out[i] = guess[i]
+    out = "".join(out)
+    print(out)
 
 
 def main():
     print("Welcome to Wordle CLI!")
+    print("You have 6 attempts to guess a 5 letter word.")
     words = getWords()
     word = getRandomWord(words)
     guess = ""
-    while len(guess) != 5 or guess not in words:
-        guess = input("Guess a 5 letter word: ")
-    i = 1
-    while guess != word:
+    i = 0
+    while True:
         if i >= 6:
             print("Sorry, you've used all your attempts. The word was:", word)
             return
-        print("Incorrect guess. Try again.")
-        print("Attempt", i, "of 6.")
-        updateCorrectLetters(word, guess)
-        guess = ""
-        print("Correct letters in green:", correct.get("green", []))
-        print("Correct letters in yellow:", correct.get("yellow", []))
-        print("Incorrect letters:", list(incorrect))
         while len(guess) != 5 or guess not in words:
-            guess = input("Guess a 5 letter word: ")
+            guess = input()
+            sys.stdout.write("\033[F")  # Ga 1 regel omhoog
+            sys.stdout.write("\033[K")  # Wis de hele lijn
+        displayGuess(word, guess)
+        guess = ""
         i += 1
-    else:
-        print("Congratulations! You've guessed the word:", word)
-        print("You took", i, "attempts to guess the word.")
+        if guess == word:
+            break
+
+    print("Congratulations! You've guessed the word:", word)
+    print("You took", i, "attempts to guess the word.")
 
 
 if __name__ == "__main__":
