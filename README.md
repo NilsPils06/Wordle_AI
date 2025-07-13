@@ -23,7 +23,6 @@ python main.py
 ## Upcoming Features
 
 In the future you will be able to let an AI guess the word for you.
-I also plan to either make a GUI or a better CLI interface (current one just uses text) for the game.
 
 ## Current features
 
